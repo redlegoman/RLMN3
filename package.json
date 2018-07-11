@@ -29,6 +29,12 @@
         "resources": {
             "media": [
                 {
+                    "file": "fonts/digital-7.ttf",
+                    "name": "FONT_TIME_DIGITAL_68",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
                     "file": "images/screenshot.png",
                     "name": "IMAGE_SCREENSHOT_1",
                     "type": "png"

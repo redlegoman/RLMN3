@@ -71,7 +71,7 @@ static void update_time(BatteryChargeState chargeState) {
 
   strftime(day, sizeof("Wednesdayx"), "%A", tick_time);
   strftime(date, sizeof("00 MTH"), "%e %b", tick_time);
-  strftime(secs, sizeof("00"), "%S", tick_time);
+  //strftime(secs, sizeof("00"), "%S", tick_time);
   
   //text_layer_set_text(s_date_layer, "00 MTH");
    
@@ -79,9 +79,13 @@ static void update_time(BatteryChargeState chargeState) {
   
   // Display this time on the TextLayer
   text_layer_set_text(s_time_layer, buffer);
+    text_layer_set_text_alignment(s_time_layer, GTextAlignmentRight);
+
     text_layer_set_text(s_day_layer, day);
     text_layer_set_text(s_date_layer, date);
-    text_layer_set_text(s_right_layer, secs);
+    //text_layer_set_text(s_right_layer, secs);  
+  text_layer_set_text(s_right_layer, percent_show);
+  
     text_layer_set_text_alignment(s_right_layer, GTextAlignmentRight);
 
   text_layer_set_text_alignment(s_date_layer, GTextAlignmentRight);
@@ -191,7 +195,7 @@ static void main_window_load(Window *window) {
   static GFont s_day_font;
   //**
    //APP_LOG(APP_LOG_LEVEL_DEBUG, "Loop index now %d", i);
-   APP_LOG(APP_LOG_LEVEL_DEBUG, " ** main_window_load **");
+   //APP_LOG(APP_LOG_LEVEL_DEBUG, " ** main_window_load **");
   //**
 
 
@@ -200,23 +204,29 @@ static void main_window_load(Window *window) {
 
   //s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_RENEGADO_39));
 //  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_SARA_53));
-  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TIME_68));
+  //s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TIME_68));
+  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TIME_DIGITAL_68));
 //  GFont custom_font = fonts_load_custom_font (resource_get_handle(RESOURCE_ID_FONT_OSP_DIN_44));
 
   
   //day
-  s_day_layer = text_layer_create(GRect(0, 15, 144, 35));
+  s_day_layer = text_layer_create(GRect(0, 44, 144, 35));
+  text_layer_set_text_alignment(s_day_layer, GTextAlignmentRight);
+  
   text_layer_set_background_color(s_day_layer, GColorClear);
   text_layer_set_text_color(s_day_layer, GColorPictonBlue);
   text_layer_set_text(s_day_layer, "Thisaday");
   // Create time TextLayer
-  s_time_layer = text_layer_create(GRect(0, 43, 144, 69));
+  //s_time_layer = text_layer_create(GRect(0, 43, 144, 69));
+  s_time_layer = text_layer_create(GRect(0, 76, 144, 69));
+  //text_layer_set_background_color(s_time_layer, GColorClear);
   text_layer_set_background_color(s_time_layer, GColorClear);
   text_layer_set_text_color(s_time_layer, GColorWhite);
   text_layer_set_text(s_time_layer, "00:00");
   //date       from left, from top, size from left, size from top
   //s_date_layer = text_layer_create(GRect(60, 104, 84, 40));
-  s_date_layer = text_layer_create(GRect(0, 109, 144, 30));
+  
+  s_date_layer = text_layer_create(GRect(0, 20, 144, 30));
   text_layer_set_background_color(s_date_layer, GColorClear);
   text_layer_set_text_color(s_date_layer, GColorPictonBlue);
   text_layer_set_text(s_date_layer, "00 MTH");
@@ -226,14 +236,14 @@ static void main_window_load(Window *window) {
   
 
  //------  NOT NEEDED?? -------------------------------------------
-  s_leftbar_layer = text_layer_create(GRect(0, 157, 72, 11));
-  text_layer_set_background_color(s_leftbar_layer, GColorWhite);
-  text_layer_set_text_color(s_leftbar_layer, GColorBlack);
+ // s_leftbar_layer = text_layer_create(GRect(0, 157, 72, 11));
+ // text_layer_set_background_color(s_leftbar_layer, GColorWhite);
+ // text_layer_set_text_color(s_leftbar_layer, GColorBlack);
   
 
-  s_rightbar_layer = text_layer_create(GRect(72, 157, 144, 11));
-  text_layer_set_background_color(s_rightbar_layer, GColorWhite);
-  text_layer_set_text_color(s_rightbar_layer, GColorBlack);
+//  s_rightbar_layer = text_layer_create(GRect(72, 157, 144, 11));
+ // text_layer_set_background_color(s_rightbar_layer, GColorWhite);
+ // text_layer_set_text_color(s_rightbar_layer, GColorBlack);
 //------  NOT NEEDED??----------------------------------------------
   
   
@@ -246,18 +256,19 @@ static void main_window_load(Window *window) {
   text_layer_set_background_color(s_left_layer, GColorClear);
   text_layer_set_text_color(s_left_layer, GColorDarkGray);
 
-  text_layer_set_text(s_left_layer, "00 %");
+  //text_layer_set_text(s_left_layer, "00 %");
 
   //seconds       from left, from top, size from left, size from top
   #ifdef PBL_COLOR
-    s_right_layer = text_layer_create(GRect(123, 149, 20, 20)); /// CHECK DIMENSIONS
+    s_right_layer = text_layer_create(GRect(113, 149, 30, 20)); /// CHECK DIMENSIONS
   #else
-    s_right_layer = text_layer_create(GRect(123, 153, 20, 20)); /// CHECK DIMENSIONS
+    s_right_layer = text_layer_create(GRect(113, 153, 30, 20)); /// CHECK DIMENSIONS
   #endif
   text_layer_set_background_color(s_right_layer, GColorClear);
   text_layer_set_text_color(s_right_layer, GColorDarkCandyAppleRed);
 
-  text_layer_set_text(s_right_layer, "00");  /// SECONDS
+  //text_layer_set_text(s_right_layer, "00");  /// SECONDS
+  text_layer_set_text(s_right_layer, "00 %");  /// SECONDS
 
   
   // Improve the layout to be more like a watchface
@@ -285,7 +296,7 @@ static void main_window_load(Window *window) {
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_date_layer));
 //  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_leftbar_layer));
 //  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_rightbar_layer));
-  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_left_layer));
+  //layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_left_layer));
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_right_layer));
   
 
