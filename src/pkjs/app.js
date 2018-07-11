@@ -7,11 +7,11 @@ Pebble.addEventListener('showConfiguration', function() {
   
   //var url = 'https://rawgit.com/redlegoman/Colour-RLM-Simple-Watch-w-Config/fixconfig/web/test4.html?01';
   
-  var url = 'https://cdn.rawgit.com/redlegoman/Colour-RLM-Simple-Watch-w-Config/2bccaac62b1450725c93d48492b8004bd332852a/web/v2.html';
+  var url = 'https://rawgit.com/redlegoman/RLMN3/master/web/index.html';
   
   /*
   
-  Above URL is on github (https://github.com/redlegoman/Colour-RLM-Simple-Watch-w-Config) and RELIES
+  Above URL is on github (https://github.com/redlegoman/RLMN3) and RELIES
   ON IT BEING THERE - DO NOT DELETE IT!
   
   */

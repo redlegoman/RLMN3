@@ -2,13 +2,13 @@
     "author": "Andy McDade",
     "dependencies": {},
     "keywords": [],
-    "name": "rlmsimplecolourconfig3",
+    "name": "rlm3",
     "pebble": {
         "capabilities": [
             "configurable"
         ],
-        "displayName": "RLM Simple Watch 3",
-        "enableMultiJS": false,
+        "displayName": "RLM3",
+        "enableMultiJS": true,
         "messageKeys": {
             "D_KEY_COLOR_BLUE": 9,
             "D_KEY_COLOR_GREEN": 8,
@@ -29,8 +29,26 @@
         "resources": {
             "media": [
                 {
+                    "file": "fonts/digital-7 (mono italic).ttf",
+                    "name": "FONT_TIME_DIGITAL_MONO_I_60",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/digital-7 (mono)",
+                    "name": "FONT_TIME_DIGITAL_MONO_60",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/libel-suit-rg",
+                    "name": "FONT_LIBEL_20",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
                     "file": "fonts/digital-7.ttf",
-                    "name": "FONT_TIME_DIGITAL_68",
+                    "name": "FONT_TIME_DIGITAL_64",
                     "targetPlatforms": null,
                     "type": "font"
                 },
@@ -92,5 +110,5 @@
             "watchface": true
         }
     },
-    "version": "0.1.0"
+    "version": "0.2.0"
 }

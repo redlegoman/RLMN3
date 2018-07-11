@@ -22,8 +22,8 @@ static TextLayer *s_day_layer;
 static TextLayer *s_date_layer;
 
 
-static TextLayer *s_leftbar_layer;
-static TextLayer *s_rightbar_layer;
+//static TextLayer *s_leftbar_layer;
+//static TextLayer *s_rightbar_layer;
 static TextLayer *s_left_layer;
 static TextLayer *s_right_layer;
 
@@ -49,7 +49,7 @@ static void update_time(BatteryChargeState chargeState) {
   static char buffer[] = "00:00";
   static char day[] = "Wednesday";
   static char date[] = "00 MTH";
-  static char secs[] = "00";
+  //static char secs[] = "00";
 
   static char percent_show[] = "00 %";
   uint8_t percent = chargeState.charge_percent;
@@ -193,24 +193,19 @@ static void main_window_load(Window *window) {
   
   static GFont s_time_font;
   static GFont s_day_font;
-  //**
-   //APP_LOG(APP_LOG_LEVEL_DEBUG, "Loop index now %d", i);
-   //APP_LOG(APP_LOG_LEVEL_DEBUG, " ** main_window_load **");
-  //**
+  static GFont s_left_font;
+  static GFont s_right_font;
+
+  s_day_font = fonts_get_system_font(FONT_KEY_GOTHIC_24);
+  s_right_font = fonts_get_system_font(FONT_KEY_GOTHIC_18);
+  s_left_font = fonts_get_system_font(FONT_KEY_GOTHIC_18);
+
+  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TIME_DIGITAL_64));
+  //s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TIME_DIGITAL_MONO_60));
 
 
-//  s_day_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_RENEGADO_14));
-  s_day_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_SARA_27));
-
-  //s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_RENEGADO_39));
-//  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_SARA_53));
-  //s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TIME_68));
-  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TIME_DIGITAL_68));
-//  GFont custom_font = fonts_load_custom_font (resource_get_handle(RESOURCE_ID_FONT_OSP_DIN_44));
-
-  
   //day
-  s_day_layer = text_layer_create(GRect(0, 44, 144, 35));
+  s_day_layer = text_layer_create(GRect(0, 64, 144, 35));
   text_layer_set_text_alignment(s_day_layer, GTextAlignmentRight);
   
   text_layer_set_background_color(s_day_layer, GColorClear);
@@ -226,26 +221,11 @@ static void main_window_load(Window *window) {
   //date       from left, from top, size from left, size from top
   //s_date_layer = text_layer_create(GRect(60, 104, 84, 40));
   
-  s_date_layer = text_layer_create(GRect(0, 20, 144, 30));
+  s_date_layer = text_layer_create(GRect(0, 40, 144, 30));
   text_layer_set_background_color(s_date_layer, GColorClear);
   text_layer_set_text_color(s_date_layer, GColorPictonBlue);
   text_layer_set_text(s_date_layer, "00 MTH");
    text_layer_set_text_alignment(s_date_layer, GTextAlignmentRight);
-  
-
-  
-
- //------  NOT NEEDED?? -------------------------------------------
- // s_leftbar_layer = text_layer_create(GRect(0, 157, 72, 11));
- // text_layer_set_background_color(s_leftbar_layer, GColorWhite);
- // text_layer_set_text_color(s_leftbar_layer, GColorBlack);
-  
-
-//  s_rightbar_layer = text_layer_create(GRect(72, 157, 144, 11));
- // text_layer_set_background_color(s_rightbar_layer, GColorWhite);
- // text_layer_set_text_color(s_rightbar_layer, GColorBlack);
-//------  NOT NEEDED??----------------------------------------------
-  
   
   //percent       from left, from top, size from left, size from top
   #ifdef PBL_COLOR
@@ -285,7 +265,9 @@ static void main_window_load(Window *window) {
   
   
   
-  text_layer_set_font(s_left_layer, fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD));
+  //text_layer_set_font(s_left_layer, fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD));
+  text_layer_set_font(s_left_layer, s_left_font);
+  text_layer_set_font(s_right_layer, s_right_font);
 
 
   // Add it as a child layer to the Window's root layer
@@ -338,14 +320,14 @@ static void main_window_load(Window *window) {
     text_layer_set_text_color(s_time_layer, t_color);
     text_layer_set_text_color(s_day_layer, d_color);
     text_layer_set_text_color(s_date_layer, d_color);
-//    text_layer_set_text_color(s_right_layer, s_color);
+    text_layer_set_text_color(s_right_layer, s_color);
 
   }else{
     window_set_background_color(s_main_window, GColorBlack);
     text_layer_set_text_color(s_time_layer, GColorWhite);
     text_layer_set_text_color(s_day_layer, GColorPictonBlue);
     text_layer_set_text_color(s_date_layer, GColorPictonBlue);
-   // text_layer_set_text_color(s_right_layer, GColorWhite);
+    text_layer_set_text_color(s_right_layer, GColorWhite);
 }
   text_layer_set_text_color(s_right_layer, GColorWhite);
   text_layer_set_text_color(s_left_layer, GColorWhite);
