@@ -215,14 +215,14 @@ static void main_window_load(Window *window) {
   s_left_font = fonts_get_system_font(FONT_KEY_GOTHIC_18);
 
   //s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TIME_DIGITAL_64));
-  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TIME_DIGITAL_MONO_60));
+  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TIME_DIGITAL_MONO_64));
 
 
   //positions
   s_date_layer = text_layer_create(GRect(0, 10, 138, 30));
   s_day_layer = text_layer_create(GRect(0, 34, 138, 35));
   s_time_layer = text_layer_create(GRect(0, 46, 142, 69));
-  
+  //-----------------------------------------------------------------------------
   s_hour_layer = text_layer_create(GRect(0, 46, 76, 69));
   s_colon_layer = text_layer_create(GRect(0, 46, 95, 69));
   s_minute_layer = text_layer_create(GRect(0, 46, 142, 69));
