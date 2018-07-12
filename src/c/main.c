@@ -136,9 +136,9 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
   Tuple *s_color_red_t = dict_find(iter, S_KEY_COLOR_RED);
   Tuple *s_color_green_t = dict_find(iter, S_KEY_COLOR_GREEN);
   Tuple *s_color_blue_t = dict_find(iter, S_KEY_COLOR_BLUE);
-  //**
+  
   Tuple *config_set_t = dict_find(iter, KEY_CONFIG_SET);
-  //**
+  
 
   
   if(color_red_t && color_green_t && color_blue_t) {
@@ -215,7 +215,7 @@ static void main_window_load(Window *window) {
   s_left_font = fonts_get_system_font(FONT_KEY_GOTHIC_18);
 
   //s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TIME_DIGITAL_64));
-  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TIME_DIGITAL_MONO_64));
+  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TIME_DIGITAL_MONO_70));
 
 
   //positions
@@ -223,8 +223,8 @@ static void main_window_load(Window *window) {
   s_day_layer = text_layer_create(GRect(0, 34, 138, 35));
   s_time_layer = text_layer_create(GRect(0, 46, 142, 69));
   //-----------------------------------------------------------------------------
-  s_hour_layer = text_layer_create(GRect(0, 46, 76, 69));
-  s_colon_layer = text_layer_create(GRect(0, 46, 95, 69));
+  s_hour_layer = text_layer_create(GRect(0, 46, 72, 69));
+  s_colon_layer = text_layer_create(GRect(0, 46, 92, 69));
   s_minute_layer = text_layer_create(GRect(0, 46, 142, 69));
     //left       from left, from top, size from left, size from top
   #ifdef PBL_COLOR

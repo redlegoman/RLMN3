@@ -36,6 +36,18 @@
                 },
                 {
                     "file": "fonts/digital-7 (mono)",
+                    "name": "FONT_TIME_DIGITAL_MONO_70",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/digital-7 (mono)",
+                    "name": "FONT_TIME_DIGITAL_MONO_68",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/digital-7 (mono)",
                     "name": "FONT_TIME_DIGITAL_MONO_64",
                     "targetPlatforms": null,
                     "type": "font"
