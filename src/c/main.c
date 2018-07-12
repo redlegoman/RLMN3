@@ -17,6 +17,9 @@
 
   
 static Window *s_main_window;
+static TextLayer *s_hour_layer;
+static TextLayer *s_colon_layer;
+static TextLayer *s_minute_layer;
 static TextLayer *s_time_layer;
 static TextLayer *s_day_layer;
 static TextLayer *s_date_layer;
@@ -46,6 +49,10 @@ static void update_time(BatteryChargeState chargeState) {
   struct tm *tick_time = localtime(&temp);
 
   // Create a long-lived buffer
+  static char hour[] = "00";
+  static char colon[] = ":";
+  static char minute[] = "00";
+  
   static char buffer[] = "00:00";
   static char day[] = "Wednesday";
   static char date[] = "00 MTH";
@@ -59,27 +66,38 @@ static void update_time(BatteryChargeState chargeState) {
   if(clock_is_24h_style() == true) {
     //Use 2h hour format
     strftime(buffer, sizeof("00:00"), "%H:%M", tick_time);
-    //strftime(buffer, sizeof("44:44"), "00:00", tick_time);
+    
+    /**/
+        strftime(hour, sizeof("00"), "%H", tick_time);
+        strftime(colon, sizeof(":"), ":", tick_time);
+        strftime(minute, sizeof("00"), "%M", tick_time);
+        /**/
+
   } else {
     //Use 12 hour format
     strftime(buffer, sizeof("00:00"), "%I:%M", tick_time);
+        strftime(hour, sizeof("00"), "%I", tick_time);
+        strftime(colon, sizeof(":"), ":", tick_time);
+        strftime(minute, sizeof("00"), "%M", tick_time);
   }
 
   strftime(day, sizeof("Wednesdayx"), "%A", tick_time);
   strftime(date, sizeof("00 MTH"), "%e %b", tick_time);
-  //strftime(secs, sizeof("00"), "%S", tick_time);
   
-  //text_layer_set_text(s_date_layer, "00 MTH");
-   
+    text_layer_set_text(s_hour_layer, hour);
+    text_layer_set_text(s_colon_layer, colon);
+    text_layer_set_text(s_minute_layer, minute); 
+    text_layer_set_text_alignment(s_hour_layer, GTextAlignmentRight);
+    text_layer_set_text_alignment(s_colon_layer, GTextAlignmentRight);
+    text_layer_set_text_alignment(s_minute_layer, GTextAlignmentRight);
+    
   
-  
-  // Display this time on the TextLayer
   text_layer_set_text(s_time_layer, buffer);
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentRight);
 
   text_layer_set_text(s_day_layer, day);
   text_layer_set_text(s_date_layer, date);
-  //text_layer_set_text(s_right_layer, secs);  
+
   text_layer_set_text(s_right_layer, percent_show);
   
   text_layer_set_text_alignment(s_right_layer, GTextAlignmentRight);
@@ -173,8 +191,10 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
     text_layer_set_text_color(s_day_layer, d_color);
     text_layer_set_text_color(s_date_layer, d_color);
     text_layer_set_text_color(s_right_layer, s_color);
-
-    //text_layer_set_text_color(s_text_layer, gcolor_is_dark(bg_color) ? GColorWhite : GColorBlack);
+    
+        text_layer_set_text_color(s_hour_layer, t_color);
+        text_layer_set_text_color(s_colon_layer, t_color);
+        text_layer_set_text_color(s_minute_layer, t_color);
 #endif
   }
 }
@@ -194,14 +214,18 @@ static void main_window_load(Window *window) {
   s_right_font = fonts_get_system_font(FONT_KEY_GOTHIC_18);
   s_left_font = fonts_get_system_font(FONT_KEY_GOTHIC_18);
 
-  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TIME_DIGITAL_64));
-  //s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TIME_DIGITAL_MONO_60));
+  //s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TIME_DIGITAL_64));
+  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TIME_DIGITAL_MONO_60));
 
 
   //positions
   s_date_layer = text_layer_create(GRect(0, 10, 138, 30));
   s_day_layer = text_layer_create(GRect(0, 34, 138, 35));
   s_time_layer = text_layer_create(GRect(0, 46, 142, 69));
+  
+  s_hour_layer = text_layer_create(GRect(0, 46, 76, 69));
+  s_colon_layer = text_layer_create(GRect(0, 46, 95, 69));
+  s_minute_layer = text_layer_create(GRect(0, 46, 142, 69));
     //left       from left, from top, size from left, size from top
   #ifdef PBL_COLOR
     s_left_layer = text_layer_create(GRect(0, 149, 52, 20));
@@ -225,7 +249,13 @@ static void main_window_load(Window *window) {
   
   //text_layer_set_background_color(s_time_layer, GColorClear);
   text_layer_set_background_color(s_time_layer, GColorClear);
+  text_layer_set_background_color(s_hour_layer, GColorClear);
+  text_layer_set_background_color(s_colon_layer, GColorClear);
+  text_layer_set_background_color(s_minute_layer, GColorClear);
   text_layer_set_text_color(s_time_layer, GColorWhite);
+  text_layer_set_text_color(s_hour_layer, GColorWhite);
+  text_layer_set_text_color(s_colon_layer, GColorWhite);
+  text_layer_set_text_color(s_minute_layer, GColorWhite);
   text_layer_set_text(s_time_layer, "00:00");
   //date       from left, from top, size from left, size from top
   //s_date_layer = text_layer_create(GRect(60, 104, 84, 40));
@@ -251,6 +281,10 @@ static void main_window_load(Window *window) {
   // Improve the layout to be more like a watchface
   //text_layer_set_font(s_time_layer, fonts_get_system_font(s_time_font));
   text_layer_set_font(s_time_layer, s_time_font);
+  
+  text_layer_set_font(s_hour_layer, s_time_font);
+  text_layer_set_font(s_colon_layer, s_time_font);
+  text_layer_set_font(s_minute_layer, s_time_font);
 
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
   
@@ -270,7 +304,11 @@ static void main_window_load(Window *window) {
   // Add it as a child layer to the Window's root layer
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_day_layer));
 
-  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_time_layer));
+////  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_time_layer));
+  
+  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_hour_layer));
+  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_colon_layer));
+  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_minute_layer));
 
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_date_layer));
 //  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_leftbar_layer));
@@ -301,20 +339,15 @@ static void main_window_load(Window *window) {
     GColor d_color = GColorFromRGB(d_red, d_green, d_blue);
     GColor s_color = GColorFromRGB(s_red, s_green, s_blue);
   
-    //APP_LOG(APP_LOG_LEVEL_DEBUG, " ** main_window_load : config_set  %d", config_set);
-
-  /*
-  if(
-    persist_read_int(KEY_COLOR_RED) || 
-    persist_read_int(T_KEY_COLOR_RED) || 
-    persist_read_int(D_KEY_COLOR_RED) || 
-    persist_read_int(S_KEY_COLOR_RED)  
-    )
-    */
   if (config_set == 1)
   {
     window_set_background_color(s_main_window, bg_color);
     text_layer_set_text_color(s_time_layer, t_color);
+    
+    text_layer_set_text_color(s_hour_layer, t_color);
+    text_layer_set_text_color(s_colon_layer, t_color);
+    text_layer_set_text_color(s_minute_layer, t_color);
+    
     text_layer_set_text_color(s_day_layer, d_color);
     text_layer_set_text_color(s_date_layer, d_color);
     text_layer_set_text_color(s_left_layer, s_color);
@@ -323,6 +356,11 @@ static void main_window_load(Window *window) {
   }else{
     window_set_background_color(s_main_window, GColorBlack);
     text_layer_set_text_color(s_time_layer, GColorWhite);
+    
+    text_layer_set_text_color(s_hour_layer, GColorWhite);
+    text_layer_set_text_color(s_colon_layer, GColorWhite);
+    text_layer_set_text_color(s_minute_layer, GColorWhite);
+
     text_layer_set_text_color(s_day_layer, GColorPictonBlue);
     text_layer_set_text_color(s_date_layer, GColorPictonBlue);
     text_layer_set_text_color(s_left_layer, GColorBlack);
@@ -344,6 +382,9 @@ static void main_window_load(Window *window) {
 static void main_window_unload(Window *window) {
   // Destroy TextLayer
   text_layer_destroy(s_time_layer);
+  text_layer_destroy(s_hour_layer);
+  text_layer_destroy(s_colon_layer);
+  text_layer_destroy(s_minute_layer);
   text_layer_destroy(s_day_layer);
   text_layer_destroy(s_date_layer);
   text_layer_destroy(s_left_layer);
