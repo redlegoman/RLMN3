@@ -54,11 +54,7 @@ static void update_time(BatteryChargeState chargeState) {
   static char percent_show[] = "00 %";
   uint8_t percent = chargeState.charge_percent;
   snprintf(percent_show, 5, "%i%%", percent);
-  //snprintf(percent_show, sizeof(battery_text), "%d%% charged", chargeState.charge_percent);
-
-  //APP_LOG(APP_LOG_LEVEL_DEBUG, "percent: %s", percent_show);
-//  text_layer_set_text(s_left_layer, percent_show);
-
+  
   // Write the current hours and minutes into the buffer
   if(clock_is_24h_style() == true) {
     //Use 2h hour format
@@ -79,14 +75,14 @@ static void update_time(BatteryChargeState chargeState) {
   
   // Display this time on the TextLayer
   text_layer_set_text(s_time_layer, buffer);
-    text_layer_set_text_alignment(s_time_layer, GTextAlignmentRight);
+  text_layer_set_text_alignment(s_time_layer, GTextAlignmentRight);
 
-    text_layer_set_text(s_day_layer, day);
-    text_layer_set_text(s_date_layer, date);
-    //text_layer_set_text(s_right_layer, secs);  
+  text_layer_set_text(s_day_layer, day);
+  text_layer_set_text(s_date_layer, date);
+  //text_layer_set_text(s_right_layer, secs);  
   text_layer_set_text(s_right_layer, percent_show);
   
-    text_layer_set_text_alignment(s_right_layer, GTextAlignmentRight);
+  text_layer_set_text_alignment(s_right_layer, GTextAlignmentRight);
 
   text_layer_set_text_alignment(s_date_layer, GTextAlignmentRight);
   text_layer_set_text(s_left_layer, percent_show);
@@ -129,10 +125,10 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
   
   if(color_red_t && color_green_t && color_blue_t) {
     // Apply the color if available
-#if defined(PBL_BW)
+    #if defined(PBL_BW)
     window_set_background_color(s_main_window, GColorBlack);
     //text_layer_set_text_color(s_text_layer, GColorBlack);
-#elif defined(PBL_COLOR)
+    #elif defined(PBL_COLOR)
     int red = color_red_t->value->int32;
     int green = color_green_t->value->int32;
     int blue = color_blue_t->value->int32;
@@ -148,7 +144,7 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
     //**
     int config_set = config_set_t->value->int32;
     //**
-     APP_LOG(APP_LOG_LEVEL_DEBUG, " ** inbox_proc: config_set =  %d", config_set);
+    // APP_LOG(APP_LOG_LEVEL_DEBUG, " ** inbox_proc: config_set =  %d", config_set);
 
     // Persist values
     persist_write_int(KEY_COLOR_RED, red);
@@ -178,8 +174,6 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
     text_layer_set_text_color(s_date_layer, d_color);
     text_layer_set_text_color(s_right_layer, s_color);
 
-
-
     //text_layer_set_text_color(s_text_layer, gcolor_is_dark(bg_color) ? GColorWhite : GColorBlack);
 #endif
   }
@@ -204,8 +198,23 @@ static void main_window_load(Window *window) {
   //s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TIME_DIGITAL_MONO_60));
 
 
-  //day
-  s_day_layer = text_layer_create(GRect(0, 64, 144, 35));
+  //positions
+  s_date_layer = text_layer_create(GRect(0, 10, 138, 30));
+  s_day_layer = text_layer_create(GRect(0, 34, 138, 35));
+  s_time_layer = text_layer_create(GRect(0, 46, 142, 69));
+    //left       from left, from top, size from left, size from top
+  #ifdef PBL_COLOR
+    s_left_layer = text_layer_create(GRect(0, 149, 52, 20));
+  #else
+    s_left_layer = text_layer_create(GRect(0, 153, 52, 20));
+  #endif
+  //right       from left, from top, size from left, size from top
+  #ifdef PBL_COLOR
+    s_right_layer = text_layer_create(GRect(113, 149, 30, 20)); /// CHECK DIMENSIONS
+  #else
+    s_right_layer = text_layer_create(GRect(113, 153, 30, 20)); /// CHECK DIMENSIONS
+  #endif
+  
   text_layer_set_text_alignment(s_day_layer, GTextAlignmentRight);
   
   text_layer_set_background_color(s_day_layer, GColorClear);
@@ -213,7 +222,7 @@ static void main_window_load(Window *window) {
   text_layer_set_text(s_day_layer, "Thisaday");
   // Create time TextLayer
   //s_time_layer = text_layer_create(GRect(0, 43, 144, 69));
-  s_time_layer = text_layer_create(GRect(0, 76, 144, 69));
+  
   //text_layer_set_background_color(s_time_layer, GColorClear);
   text_layer_set_background_color(s_time_layer, GColorClear);
   text_layer_set_text_color(s_time_layer, GColorWhite);
@@ -221,29 +230,17 @@ static void main_window_load(Window *window) {
   //date       from left, from top, size from left, size from top
   //s_date_layer = text_layer_create(GRect(60, 104, 84, 40));
   
-  s_date_layer = text_layer_create(GRect(0, 40, 144, 30));
   text_layer_set_background_color(s_date_layer, GColorClear);
   text_layer_set_text_color(s_date_layer, GColorPictonBlue);
   text_layer_set_text(s_date_layer, "00 MTH");
    text_layer_set_text_alignment(s_date_layer, GTextAlignmentRight);
   
-  //percent       from left, from top, size from left, size from top
-  #ifdef PBL_COLOR
-    s_left_layer = text_layer_create(GRect(0, 149, 52, 20));
-  #else
-    s_left_layer = text_layer_create(GRect(0, 153, 52, 20));
-  #endif
+ 
   text_layer_set_background_color(s_left_layer, GColorClear);
   text_layer_set_text_color(s_left_layer, GColorDarkGray);
 
   //text_layer_set_text(s_left_layer, "00 %");
 
-  //seconds       from left, from top, size from left, size from top
-  #ifdef PBL_COLOR
-    s_right_layer = text_layer_create(GRect(113, 149, 30, 20)); /// CHECK DIMENSIONS
-  #else
-    s_right_layer = text_layer_create(GRect(113, 153, 30, 20)); /// CHECK DIMENSIONS
-  #endif
   text_layer_set_background_color(s_right_layer, GColorClear);
   text_layer_set_text_color(s_right_layer, GColorDarkCandyAppleRed);
 
@@ -304,7 +301,7 @@ static void main_window_load(Window *window) {
     GColor d_color = GColorFromRGB(d_red, d_green, d_blue);
     GColor s_color = GColorFromRGB(s_red, s_green, s_blue);
   
-    APP_LOG(APP_LOG_LEVEL_DEBUG, " ** main_window_load : config_set  %d", config_set);
+    //APP_LOG(APP_LOG_LEVEL_DEBUG, " ** main_window_load : config_set  %d", config_set);
 
   /*
   if(
@@ -320,6 +317,7 @@ static void main_window_load(Window *window) {
     text_layer_set_text_color(s_time_layer, t_color);
     text_layer_set_text_color(s_day_layer, d_color);
     text_layer_set_text_color(s_date_layer, d_color);
+    text_layer_set_text_color(s_left_layer, s_color);
     text_layer_set_text_color(s_right_layer, s_color);
 
   }else{
@@ -327,10 +325,11 @@ static void main_window_load(Window *window) {
     text_layer_set_text_color(s_time_layer, GColorWhite);
     text_layer_set_text_color(s_day_layer, GColorPictonBlue);
     text_layer_set_text_color(s_date_layer, GColorPictonBlue);
+    text_layer_set_text_color(s_left_layer, GColorBlack);
     text_layer_set_text_color(s_right_layer, GColorWhite);
 }
-  text_layer_set_text_color(s_right_layer, GColorWhite);
-  text_layer_set_text_color(s_left_layer, GColorWhite);
+  //text_layer_set_text_color(s_right_layer, GColorYellow);
+  //text_layer_set_text_color(s_left_layer, GColorYellow);
   
 //####################################################################################
   
@@ -347,6 +346,8 @@ static void main_window_unload(Window *window) {
   text_layer_destroy(s_time_layer);
   text_layer_destroy(s_day_layer);
   text_layer_destroy(s_date_layer);
+  text_layer_destroy(s_left_layer);
+  text_layer_destroy(s_right_layer);
 
   
 }
@@ -376,7 +377,9 @@ static void init() {
   window_stack_push(s_main_window, true);
   
   // Register with TickTimerService
-  tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
+  
+  //tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
+  tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
   
   
 }
